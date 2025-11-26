@@ -1,7 +1,7 @@
-package com.anjali.aqi_backend.service;
+package com.vaishu.aqi_backend.service;
 
-import com.anjali.aqi_backend.model.AqiResponse;
-import com.anjali.aqi_backend.model.SearchResponse;
+import com.vaishu.aqi_backend.model.AqiResponse;
+import com.vaishu.aqi_backend.model.SearchResponse;
 import io.github.cdimascio.dotenv.Dotenv;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;

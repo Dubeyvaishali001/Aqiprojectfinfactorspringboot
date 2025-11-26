@@ -1,8 +1,8 @@
-package com.anjali.aqi_backend.controller;
+package com.vaishu.aqi_backend.controller;
 
 
-import com.anjali.aqi_backend.model.AqiResponse;
-import com.anjali.aqi_backend.service.AqiService;
+import com.vaishu.aqi_backend.model.AqiResponse;
+import com.vaishu.aqi_backend.service.AqiService;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

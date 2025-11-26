@@ -1,5 +1,5 @@
 
-package com.anjali.aqi_backend.model;
+package com.vaishu.aqi_backend.model;
 
 import java.util.List;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;

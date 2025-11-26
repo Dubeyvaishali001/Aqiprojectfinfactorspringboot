@@ -1,4 +1,4 @@
-package com.anjali.aqi_backend.model;
+package com.vaishu.aqi_backend.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;

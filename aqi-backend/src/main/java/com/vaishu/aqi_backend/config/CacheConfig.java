@@ -1,4 +1,4 @@
-package com.anjali.aqi_backend.config;
+package com.vaishu.aqi_backend.config;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
 import org.springframework.cache.CacheManager;

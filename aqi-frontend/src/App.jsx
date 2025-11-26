@@ -7,17 +7,9 @@ export default function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const getAqiColor = (aqi) => {
-    if (aqi <= 50) return "bg-green-500";
-    if (aqi <= 100) return "bg-yellow-400";
-    if (aqi <= 150) return "bg-orange-500";
-    if (aqi <= 200) return "bg-red-600";
-    if (aqi <= 300) return "bg-purple-700";
-    return "bg-rose-950";
-  };
-
-  const fetchData = async () => {
+  const fetchAqi = async () => {
     if (!city.trim()) return;
+
     setLoading(true);
     setError("");
     setAqiData(null);
@@ -25,99 +17,97 @@ export default function App() {
     try {
       const res = await axios.get(`http://localhost:8080/api/aqi/${city}`);
       setAqiData(res.data);
-    } catch {
-      setError("City not found or API failed");
+    } catch (err) {
+      console.log(err);
+      setError("City not found or API error.");
     }
 
     setLoading(false);
   };
 
-  const handleEnter = (e) => {
-    if (e.key === "Enter") fetchData();
-  };
+  const handleEnter = (e) => e.key === "Enter" && fetchAqi();
 
   const data = aqiData?.data;
 
-  return (
-    <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center py-10">
-      <h1 className="text-3xl font-bold mb-6">🌍 Air Quality Search Engine</h1>
+  // 🛑 SAFETY: Pollutants array fallback
+  const pollutants = data?.iaqi ? Object.entries(data.iaqi) : [];
 
-      <div className="flex gap-3">
+  return (
+    <div className="min-h-screen bg-gray-100 flex flex-col items-center py-10 px-4">
+      <h1 className="text-3xl font-bold mb-6">Air Quality Checker</h1>
+
+      {/* Search box */}
+      <div className="flex gap-3 mb-8">
         <input
           type="text"
           placeholder="Enter city name..."
-          className="px-4 py-2 rounded-md bg-gray-800 border border-gray-600"
           value={city}
           onChange={(e) => setCity(e.target.value)}
           onKeyDown={handleEnter}
+          className="px-4 py-2 border border-gray-400 rounded-md bg-white w-64"
         />
         <button
-          onClick={fetchData}
+          onClick={fetchAqi}
           disabled={loading}
-          className="px-4 py-2 bg-blue-600 hover:bg-blue-700 disabled:bg-gray-600 rounded-md"
+          className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-500"
         >
           {loading ? "Searching..." : "Search"}
         </button>
       </div>
 
-      {error && <p className="mt-4 text-red-400">{error}</p>}
+      {error && <p className="text-red-600">{error}</p>}
 
-      {aqiData && (
-        <div className="mt-10 p-8 w-96 rounded-xl bg-gray-800 shadow-xl">
-          <h2 className="text-xl font-semibold text-center mb-4">
-            {aqiData.data.city.name}
+      {/* RESULT CARD */}
+      {aqiData && data && (
+        <div className="bg-white w-full max-w-2xl rounded-xl p-8 shadow border border-gray-300">
+          <h2 className="text-xl font-bold mb-3">
+            {data.city?.name ?? "Unknown Location"}
           </h2>
 
-          <div
-            className={`text-center text-4xl font-black p-4 rounded-lg ${getAqiColor(
-              aqiData.data.aqi
-            )}`}
-          >
-            {aqiData.data.aqi}
-          </div>
+          <p className="text-lg mb-1">
+            <span className="font-semibold">AQI:</span> {data.aqi ?? "N/A"}
+          </p>
 
-          <p className="text-center mt-2 text-gray-300">Air Quality Index</p>
+          <p className="text-lg mb-1">
+            <span className="font-semibold">Dominant Pollutant:</span>{" "}
+            {data.dominentpol ?? "N/A"}
+          </p>
 
-          <h3 className="mt-6 font-semibold">Pollutants</h3>
+          <p className="text-lg mb-4">
+            <span className="font-semibold">Last Updated:</span>{" "}
+            {data.time?.s ?? "N/A"}
+          </p>
 
-          <div className="grid grid-cols-2 gap-4 text-sm mt-3">
-            {data.iaqi?.pm25?.v !== undefined && (
-              <div className="bg-gray-200 text-gray-900 p-3 rounded-lg shadow">
-                <span className="block text-xs font-semibold opacity-70">PM2.5</span>
-                <span className="font-bold text-lg">{data.iaqi.pm25.v}</span>
-              </div>
-            )}
-            {data.iaqi?.pm10?.v !== undefined && (
-              <div className="bg-gray-200 text-gray-900 p-3 rounded-lg shadow">
-                <span className="block text-xs font-semibold opacity-70">PM10</span>
-                <span className="font-bold text-lg">{data.iaqi.pm10.v}</span>
-              </div>
-            )}
-            {data.iaqi?.o3?.v !== undefined && (
-              <div className="bg-gray-200 text-gray-900 p-3 rounded-lg shadow">
-                <span className="block text-xs font-semibold opacity-70">O₃</span>
-                <span className="font-bold text-lg">{data.iaqi.o3.v}</span>
-              </div>
-            )}
-            {data.iaqi?.no2?.v !== undefined && (
-              <div className="bg-gray-200 text-gray-900 p-3 rounded-lg shadow">
-                <span className="block text-xs font-semibold opacity-70">NO₂</span>
-                <span className="font-bold text-lg">{data.iaqi.no2.v}</span>
-              </div>
-            )}
-            {data.iaqi?.so2?.v !== undefined && (
-              <div className="bg-gray-200 text-gray-900 p-3 rounded-lg shadow">
-                <span className="block text-xs font-semibold opacity-70">SO₂</span>
-                <span className="font-bold text-lg">{data.iaqi.so2.v}</span>
-              </div>
-            )}
-            {data.iaqi?.co?.v !== undefined && (
-              <div className="bg-gray-200 text-gray-900 p-3 rounded-lg shadow">
-                <span className="block text-xs font-semibold opacity-70">CO</span>
-                <span className="font-bold text-lg">{data.iaqi.co.v}</span>
-              </div>
-            )}
-          </div>
+          <h3 className="text-lg font-semibold mb-3 flex items-center gap-2">
+            <span>📊</span> Pollutants
+          </h3>
+
+          {/* Pollutants Table */}
+          <table className="w-full border-collapse">
+            <thead>
+              <tr className="bg-gray-200 border">
+                <th className="border px-4 py-2 text-left">Pollutant</th>
+                <th className="border px-4 py-2 text-left">Value</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {pollutants.length > 0 ? (
+                pollutants.map(([key, obj]) => (
+                  <tr key={key} className="border">
+                    <td className="border px-4 py-2 uppercase">{key}</td>
+                    <td className="border px-4 py-2">{obj?.v ?? "N/A"}</td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td className="border px-4 py-2" colSpan="2">
+                    No pollutant data available.
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
         </div>
       )}
     </div>

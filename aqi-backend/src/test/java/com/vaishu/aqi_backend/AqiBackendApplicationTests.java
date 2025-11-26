@@ -1,4 +1,4 @@
-package com.anjali.aqi_backend;
+package com.vaishu.aqi_backend;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

@@ -10,7 +10,7 @@
         <relativePath/>
     </parent>
     
-    <groupId>com.anjali</groupId>
+    <groupId>com.vaishu</groupId>
     <artifactId>aqi-backend</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>aqi-backend</name>
